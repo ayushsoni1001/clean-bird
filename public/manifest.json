@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Clean Bird",
+  "version": "1.0",
+  "description": "Clean your twiiter feed from unwanted tweets",
+  "icons": {
+    "128": "icons/clean-bird.png"
+  },
+  "action": {
+    "default_title": "Clean Bird",
+    "default_popup": "./popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://twitter.com/*"],
+      "js": ["extensionInjector.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["extension.js", "block-list.json"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "host_permissions": ["https://*/*"],
+  "permissions": ["storage", "activeTab", "scripting"]
+}
