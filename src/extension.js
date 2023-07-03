@@ -9,21 +9,21 @@ async function startExtension() {
     const tweets = document.querySelectorAll('[data-testid="tweet"]');
     return tweets;
   }
-  function cleanTweets(data) {
+  function cleanTweets(blockList) {
     const tweets = getAllTweets();
     Array.from(tweets).map(tweet => {
       try {
         const tweetText = tweet.querySelector('[data-testid="tweetText"]').innerHTML;
         const tweetAuthorUsername = tweet.querySelector("[data-testid^='UserAvatar-Container-']").dataset.testid.replace("UserAvatar-Container-", "");
   
-        let textFound = _.some(data.text_content, function(keyword) {
+        let textFound = _.some(blockList.text_content, function(keyword) {
             let keywordArray = keyword.toLowerCase().split(' ');
             return _.every(keywordArray, function(keyword) {
               return _.includes(tweetText, keyword);
             });
         });
   
-        let authorFound = _.some(data.user_list, function(username) {
+        let authorFound = _.some(blockList.user_list, function(username) {
             return _.includes(tweetAuthorUsername.toLowerCase(), username.toLowerCase());
         });
 
@@ -38,8 +38,26 @@ async function startExtension() {
     })
   }
   addEventListener("DOMContentLoaded", async () => {
-    const data = await fetch("chrome-extension://jegnhcbblinfhmggcdccoecdiihkfipn/block-list.json").then(res => res.json())
-    const cleanInterval = setInterval(() => {cleanTweets(data)}, 500);
+    const blockList = {
+      "text_content": [
+        "most useful AI tools",
+        "mind-blowing AI websites",
+        "Here are ChatGPT thread",
+        "easy to make MONEY online",
+        "Here are AI websites",
+        "Here are tools",
+        "chatgpt is old news",
+        "here’s how",
+        "99% of people don't know",
+        "ways ChatGPT",
+        "AI prompts",
+        "chatgpt things you can do",
+        "Lemme show you how",
+        "here steps"
+      ],
+      "user_list": []
+    }
+    const cleanInterval = setInterval(() => {cleanTweets(blockList)}, 500);
   })
 }
 
